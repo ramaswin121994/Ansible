@@ -1,0 +1,36 @@
+---
+
+- hosts: 192.168.0.11
+  sudo: yes
+  remote_user: root
+  gather_facts: no
+  
+  pre_tasks:
+   - name: install python2
+     raw: sudo apt-get -y install python-simplejson
+     ignore_errors: yes
+  
+  tasks:
+   - name: Gathering facts
+     setup:
+   - include: ./tasks/install.yml
+   - include: ./tasks/configure.yml
+  
+  handlers:
+   - include: ./handlers/handlers.yml
+ 
+  vars:
+# Master = namenode and resourcemanager
+# Slave = datanode and nodemanager
+   hadoop_master: '192.168.0.13'
+   hadoop_slave: '192.168.0.11'
+# The type of the node: slave / master  
+   hadoop_type_of_node: slave
+# Hadoop base directory to install the software
+   hadoop_home: /opt/hadoop-2.X
+# List of servers to download the hadoop code
+   hadoop_mirrors: [ "http://ftp.osuosl.org/pub/apache/hadoop/core/stable2/", "http://apache.rediris.es/hadoop/core/stable2/", "http://ftp.cixug.es/apache/hadoop/core/stable2/", "http://www-eu.apache.org/dist/hadoop/common/stable2/" ]
+# Hadoop version to install
+   hadoop_version: 2.7.4
+
+   
